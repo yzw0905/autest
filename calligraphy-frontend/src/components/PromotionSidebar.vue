@@ -12,14 +12,12 @@
         <div v-for="(item, index) in promotionItems" :key="index" class="promotion-item" @click="viewProductDetails(item.productId)">
           <div class="item-image">
             <img :src="getCartoonImage(item.imagePath)" :alt="item.productName" />
-            <div class="image-price-overlay">
-              <div class="overlay-price">
-                <div class="overlay-original-price">¥{{ item.originalPrice }}</div>
-                <div class="overlay-current-price">¥{{ item.price }}</div>
-              </div>
-              <div class="overlay-discount">{{ item.discount }}</div>
+            <div class="item-hot-badge">HOT</div>
+            <div class="item-price-popup">
+              <div class="popup-original-price">¥{{ item.originalPrice }}</div>
+              <div class="popup-current-price">¥{{ item.price }}</div>
+              <div class="popup-discount">{{ item.discount }}</div>
             </div>
-            <div class="item-badge">HOT</div>
           </div>
           <div class="item-info">
             <div class="item-name">{{ item.productName }}</div>
@@ -234,46 +232,53 @@ export default {
   height: 40px;
 }
 
-.image-price-overlay {
+.item-price-popup {
   position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: rgba(0, 0, 0, 0.7);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 5px 8px;
-}
-
-.overlay-price {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(255, 255, 255, 0.9);
+  border: 2px solid var(--primary-color);
+  border-radius: 8px;
+  padding: 8px 12px;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  min-width: 100px;
 }
 
-.overlay-original-price {
-  font-size: 11px;
-  color: #ccc;
+.item-image:hover .item-price-popup {
+  opacity: 1;
+}
+
+.popup-original-price {
+  font-size: 12px;
+  color: var(--light-text);
   text-decoration: line-through;
+  margin-bottom: 2px;
 }
 
-.overlay-current-price {
-  font-size: 14px;
+.popup-current-price {
+  font-size: 18px;
   font-weight: bold;
-  color: white;
+  color: var(--primary-color);
+  margin-bottom: 2px;
 }
 
-.overlay-discount {
+.popup-discount {
   font-size: 12px;
   background-color: var(--accent-color);
   color: white;
-  padding: 2px 6px;
-  border-radius: 2px;
+  padding: 2px 8px;
+  border-radius: 12px;
   font-weight: bold;
 }
 
-.item-badge {
+.item-hot-badge {
   position: absolute;
   top: 10px;
   right: 10px;
@@ -284,6 +289,7 @@ export default {
   padding: 3px 6px;
   border-radius: 2px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 2;
 }
 
 .item-rating {
