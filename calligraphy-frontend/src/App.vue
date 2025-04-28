@@ -24,33 +24,79 @@
       </div>
     </div>
 
-    <!-- Main header with logo, search and cart (JD style) -->
+    <!-- Main header with logo, search and cart (Modern E-commerce style) -->
     <div class="main-header">
       <div class="container">
-        <div class="logo" @click="$router.push('/')">Calligraphy Art</div>
-        <div class="search-box">
-          <input type="text" placeholder="Search calligraphy products" v-model="searchQuery" @keyup.enter="search" />
-          <button @click="search">Search</button>
+        <div class="logo" @click="$router.push('/')">
+          <span class="logo-text">Calligraphy</span>
+          <span class="logo-accent">Art</span>
         </div>
-        <div class="shopping-cart" @click="$router.push('/cart')">
-          <i class="cart-icon">🛒</i>
-          <span>Cart</span>
+        <div class="search-box">
+          <div class="search-categories">
+            <select>
+              <option>All Categories</option>
+              <option>Brushes</option>
+              <option>Ink</option>
+              <option>Paper</option>
+              <option>Calligraphy Works</option>
+            </select>
+          </div>
+          <input type="text" placeholder="Search for calligraphy products..." v-model="searchQuery" @keyup.enter="search" />
+          <button @click="search">
+            <i class="search-icon">🔍</i>
+          </button>
+        </div>
+        <div class="header-actions">
+          <div class="action-item wishlist" @click="$router.push('/wishlist')">
+            <i class="action-icon">❤️</i>
+            <span>Wishlist</span>
+          </div>
+          <div class="action-item shopping-cart" @click="$router.push('/cart')">
+            <i class="cart-icon">🛒</i>
+            <span>Cart</span>
+            <div class="cart-count">0</div>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Category navigation (JD style) -->
+    <!-- Category navigation (Modern Mega Menu style) -->
     <div class="category-nav">
       <div class="container">
-        <ul class="category-list">
-          <li><router-link to="/products?category=brushes">Brushes</router-link></li>
-          <li><router-link to="/products?category=ink">Ink</router-link></li>
-          <li><router-link to="/products?category=paper">Rice Paper</router-link></li>
-          <li><router-link to="/products?category=calligraphy works">Calligraphy Works</router-link></li>
-          <li><router-link to="/products?category=accessories">Accessories</router-link></li>
-          <li><router-link to="/products?category=sets">Calligraphy Sets</router-link></li>
-          <li><router-link to="/products">All Products</router-link></li>
-        </ul>
+        <div class="category-menu">
+          <div class="all-categories">
+            <i class="menu-icon">☰</i>
+            <span>All Categories</span>
+          </div>
+          <ul class="category-list">
+            <li><router-link to="/products?category=brushes">Brushes</router-link></li>
+            <li><router-link to="/products?category=ink">Ink</router-link></li>
+            <li><router-link to="/products?category=paper">Rice Paper</router-link></li>
+            <li><router-link to="/products?category=calligraphy works">Calligraphy Works</router-link></li>
+            <li><router-link to="/products?category=accessories">Accessories</router-link></li>
+            <li><router-link to="/products?category=sets">Calligraphy Sets</router-link></li>
+            <li><router-link to="/products">All Products</router-link></li>
+          </ul>
+        </div>
+        <div class="nav-promotions">
+          <div class="promo-tag">
+            <i class="promo-icon">🎁</i>
+            <span>Flash Sale</span>
+          </div>
+          <div class="promo-tag">
+            <i class="promo-icon">💳</i>
+            <span>Coupons</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Banner Carousel (New) -->
+    <div class="banner-section" v-if="$route.path === '/' || $route.path === '/products'">
+      <div class="container">
+        <div class="banner-carousel">
+          <img src="/images/banner1.jpg" alt="Special Offer" class="banner-image" />
+        </div>
       </div>
     </div>
 
@@ -149,18 +195,19 @@ export default {
 :root {
   --primary-color: #e1251b; /* JD red */
   --secondary-color: #f10215;
-  --accent-color: #fff;
+  --accent-color: #ff9900;
   --text-color: #333;
+  --light-text: #666;
   --light-bg: #f5f5f5;
   --border-color: #e3e4e5;
   --hover-color: #c81623;
   --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   --hover-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-  --border-radius: 2px;
-  --transition-speed: 0.2s;
+  --border-radius: 4px;
+  --transition-speed: 0.3s;
   --container-width: 1190px;
   --header-height: 100px;
-  --nav-height: 40px;
+  --nav-height: 45px;
 }
 
 * {
@@ -170,7 +217,7 @@ export default {
 }
 
 body {
-  font-family: "Microsoft YaHei", Arial, sans-serif;
+  font-family: 'Segoe UI', 'Microsoft YaHei', Roboto, Arial, sans-serif;
   background-color: var(--light-bg);
   color: var(--text-color);
   line-height: 1.5;
@@ -227,6 +274,7 @@ body {
   display: flex;
   align-items: center;
   box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  padding: 20px 0;
 }
 
 .main-header .container {
@@ -237,92 +285,215 @@ body {
 }
 
 .logo {
-  width: 190px;
-  height: 60px;
-  background: var(--primary-color);
-  color: white;
-  font-size: 24px;
-  font-weight: bold;
   display: flex;
   align-items: center;
-  justify-content: center;
-  border-radius: var(--border-radius);
   cursor: pointer;
+}
+
+.logo-text {
+  font-size: 28px;
+  font-weight: bold;
+  color: var(--text-color);
+}
+
+.logo-accent {
+  font-size: 28px;
+  font-weight: bold;
+  color: var(--primary-color);
+  margin-left: 4px;
 }
 
 .search-box {
   display: flex;
   width: 550px;
-  height: 36px;
+  height: 40px;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.search-categories {
+  width: 130px;
+  background-color: #f5f5f5;
+  border-right: 1px solid var(--border-color);
+}
+
+.search-categories select {
+  width: 100%;
+  height: 100%;
+  padding: 0 10px;
+  border: none;
+  background-color: transparent;
+  font-size: 13px;
+  color: var(--light-text);
+  cursor: pointer;
+  outline: none;
 }
 
 .search-box input {
   flex: 1;
   height: 100%;
-  padding: 0 10px;
-  border: 2px solid var(--primary-color);
+  padding: 0 15px;
+  border: 1px solid var(--border-color);
+  border-left: none;
   border-right: none;
-  border-radius: var(--border-radius) 0 0 var(--border-radius);
   outline: none;
   font-size: 14px;
 }
 
 .search-box button {
-  width: 80px;
+  width: 50px;
   height: 100%;
   background-color: var(--primary-color);
   color: white;
   border: none;
-  border-radius: 0 var(--border-radius) var(--border-radius) 0;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-.shopping-cart {
+  font-size: 18px;
   display: flex;
   align-items: center;
-  height: 36px;
-  padding: 0 15px;
-  background-color: #f9f9f9;
-  border: 1px solid #e3e4e5;
-  border-radius: var(--border-radius);
+  justify-content: center;
+}
+
+.search-box button:hover {
+  background-color: var(--hover-color);
+  transition: background-color var(--transition-speed);
+}
+
+.header-actions {
+  display: flex;
+  gap: 20px;
+}
+
+.action-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   cursor: pointer;
+  position: relative;
 }
 
-.shopping-cart:hover {
-  background-color: #f0f0f0;
+.action-icon, .cart-icon {
+  font-size: 20px;
+  margin-bottom: 4px;
 }
 
-.cart-icon {
-  margin-right: 5px;
-  font-size: 16px;
+.action-item span {
+  font-size: 12px;
+  color: var(--light-text);
+}
+
+.cart-count {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: var(--primary-color);
+  color: white;
+  font-size: 10px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Category navigation */
 .category-nav {
   background-color: var(--primary-color);
-  height: 40px;
-  line-height: 40px;
+  height: var(--nav-height);
+  line-height: var(--nav-height);
+}
+
+.category-nav .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+}
+
+.category-menu {
+  display: flex;
+  height: 100%;
+  flex: 1;
+}
+
+.all-categories {
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  background-color: rgba(0, 0, 0, 0.1);
+  color: white;
+  font-weight: bold;
+  height: 100%;
+  cursor: pointer;
+}
+
+.menu-icon {
+  margin-right: 8px;
 }
 
 .category-list {
   display: flex;
   list-style: none;
+  height: 100%;
 }
 
 .category-list li {
-  margin-right: 20px;
+  margin-right: 0;
+  height: 100%;
 }
 
 .category-list a {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding: 0 20px;
   color: white;
   text-decoration: none;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 500;
+  transition: background-color var(--transition-speed);
 }
 
 .category-list a:hover {
-  color: #ffccc7;
+  background-color: var(--hover-color);
+  color: white;
+}
+
+.nav-promotions {
+  display: flex;
+  gap: 15px;
+}
+
+.promo-tag {
+  display: flex;
+  align-items: center;
+  color: white;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.promo-icon {
+  margin-right: 5px;
+}
+
+/* Banner Section */
+.banner-section {
+  padding: 20px 0;
+  background-color: white;
+}
+
+.banner-carousel {
+  width: 100%;
+  height: 300px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: var(--card-shadow);
+}
+
+.banner-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 /* Content container */
