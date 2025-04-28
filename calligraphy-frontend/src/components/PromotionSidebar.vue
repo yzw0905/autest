@@ -15,6 +15,7 @@
             <div class="item-price">
               <span class="original-price">¥{{ item.originalPrice }}</span>
               <span class="current-price">¥{{ item.price }}</span>
+              <span class="discount-tag">{{ item.discount }}</span>
             </div>
           </div>
         </div>
@@ -38,27 +39,27 @@ export default {
     const promotionItems = ref([
       {
         productId: 1,
-        productName: '书法毛笔套装',
+        productName: 'Calligraphy Brush Set',
         price: 29.99,
         originalPrice: 39.99,
         imagePath: '/images/products/product1.jpg',
-        discount: '7.5折'
+        discount: '25% OFF'
       },
       {
         productId: 2,
-        productName: '传统黑墨',
+        productName: 'Premium Ink',
         price: 15.99,
         originalPrice: 19.99,
         imagePath: '/images/products/product2.jpg',
-        discount: '8折'
+        discount: '20% OFF'
       },
       {
         productId: 3,
-        productName: '书法练习用纸',
+        productName: 'Rice Paper',
         price: 12.99,
         originalPrice: 16.99,
         imagePath: '/images/products/product3.jpg',
-        discount: '7.6折'
+        discount: '24% OFF'
       }
     ]);
 
@@ -67,7 +68,8 @@ export default {
     };
 
     const viewProductDetails = (productId) => {
-      router.push(`/products/${productId}`);
+      // 使用 replace 而不是 push，以确保在同一产品详情页内点击也能正常跳转
+      router.replace(`/products/${productId}`);
     };
 
     return {
@@ -202,5 +204,14 @@ export default {
   font-size: 16px;
   font-weight: bold;
   color: var(--primary-color);
+}
+
+.discount-tag {
+  font-size: 12px;
+  background-color: var(--primary-color);
+  color: white;
+  padding: 2px 4px;
+  border-radius: 2px;
+  margin-left: 5px;
 }
 </style>
