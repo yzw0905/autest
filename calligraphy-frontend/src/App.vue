@@ -1,5 +1,7 @@
 <template>
   <div class="app-container">
+    <!-- Promotion Sidebar -->
+    <PromotionSidebar />
     <!-- Top navigation bar (JD style) -->
     <div class="top-nav">
       <div class="container">
@@ -21,7 +23,7 @@
         </div>
       </div>
     </div>
-    
+
     <!-- Main header with logo, search and cart (JD style) -->
     <div class="main-header">
       <div class="container">
@@ -36,7 +38,7 @@
         </div>
       </div>
     </div>
-    
+
     <!-- Category navigation (JD style) -->
     <div class="category-nav">
       <div class="container">
@@ -51,12 +53,12 @@
         </ul>
       </div>
     </div>
-    
+
     <!-- Main content -->
     <div class="content-container">
       <router-view></router-view>
     </div>
-    
+
     <!-- Footer (JD style) -->
     <div class="footer">
       <div class="container">
@@ -99,14 +101,18 @@
 import { computed, ref } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
+import PromotionSidebar from './components/PromotionSidebar.vue';
 
 export default {
   name: 'App',
+  components: {
+    PromotionSidebar
+  },
   setup() {
     const store = useStore();
     const router = useRouter();
     const searchQuery = ref('');
-    
+
     const isLoggedIn = computed(() => store.getters.isLoggedIn);
     const isAdmin = computed(() => store.getters.isAdmin);
     const username = computed(() => {
@@ -115,18 +121,18 @@ export default {
       }
       return 'User';
     });
-    
+
     const logout = () => {
       store.commit('logout');
       router.push('/login');
     };
-    
+
     const search = () => {
       if (searchQuery.value.trim()) {
         router.push(`/products?search=${encodeURIComponent(searchQuery.value.trim())}`);
       }
     };
-    
+
     return {
       searchQuery,
       isLoggedIn,
