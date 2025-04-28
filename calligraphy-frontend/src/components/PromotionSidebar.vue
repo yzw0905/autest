@@ -9,14 +9,16 @@
         <div v-for="(item, index) in promotionItems" :key="index" class="promotion-item" @click="viewProductDetails(item.productId)">
           <div class="item-image">
             <img :src="getCartoonImage(item.imagePath)" :alt="item.productName" />
+            <div class="image-price-overlay">
+              <div class="overlay-price">
+                <div class="overlay-original-price">¥{{ item.originalPrice }}</div>
+                <div class="overlay-current-price">¥{{ item.price }}</div>
+              </div>
+              <div class="overlay-discount">{{ item.discount }}</div>
+            </div>
           </div>
           <div class="item-info">
             <div class="item-name">{{ item.productName }}</div>
-            <div class="item-price">
-              <span class="original-price">¥{{ item.originalPrice }}</span>
-              <span class="current-price">¥{{ item.price }}</span>
-              <span class="discount-tag">{{ item.discount }}</span>
-            </div>
           </div>
         </div>
       </div>
@@ -68,8 +70,8 @@ export default {
     };
 
     const viewProductDetails = (productId) => {
-      // 使用 replace 而不是 push，以确保在同一产品详情页内点击也能正常跳转
-      router.replace(`/products/${productId}`);
+      // 强制刷新页面来确保跳转正常
+      window.location.href = `/products/${productId}`;
     };
 
     return {
@@ -165,6 +167,7 @@ export default {
   border-radius: 4px;
   overflow: hidden;
   margin-right: 8px;
+  position: relative;
 }
 
 .item-image img {
@@ -188,30 +191,41 @@ export default {
   overflow: hidden;
 }
 
-.item-price {
+.image-price-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.6);
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 5px;
+  padding: 2px 4px;
 }
 
-.original-price {
-  font-size: 12px;
-  color: #999;
+.overlay-price {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.overlay-original-price {
+  font-size: 10px;
+  color: #ccc;
   text-decoration: line-through;
 }
 
-.current-price {
-  font-size: 16px;
+.overlay-current-price {
+  font-size: 12px;
   font-weight: bold;
-  color: var(--primary-color);
+  color: white;
 }
 
-.discount-tag {
-  font-size: 12px;
+.overlay-discount {
+  font-size: 10px;
   background-color: var(--primary-color);
   color: white;
-  padding: 2px 4px;
+  padding: 1px 3px;
   border-radius: 2px;
-  margin-left: 5px;
 }
 </style>
