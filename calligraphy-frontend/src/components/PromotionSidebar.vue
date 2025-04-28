@@ -10,35 +10,41 @@
         <div class="drag-handle">☰</div>
       </div>
       <div class="promotion-items">
-        <transition-group name="slide" tag="div" class="carousel-container">
-          <div v-for="(item, index) in visibleItems" :key="item.productId" class="promotion-item" @click="viewProductDetails(item.productId)">
-            <div class="item-image">
-              <img :src="getCartoonImage(item.imagePath)" :alt="item.productName" />
-              <div class="item-hot-badge">HOT</div>
-              <div class="item-price-popup">
-                <div class="popup-original-price">¥{{ item.originalPrice }}</div>
-                <div class="popup-current-price">¥{{ item.price }}</div>
-                <div class="popup-discount">{{ item.discount }}</div>
+        <div class="carousel-wrapper">
+          <transition-group name="slide" tag="div" class="carousel-container">
+            <div v-for="(item, index) in visibleItems" :key="item.productId" class="promotion-item" @click="viewProductDetails(item.productId)">
+              <div class="item-image">
+                <img :src="getCartoonImage(item.imagePath)" :alt="item.productName" />
+                <div class="item-hot-badge">HOT</div>
+                <div class="item-price-popup">
+                  <div class="popup-original-price">¥{{ item.originalPrice }}</div>
+                  <div class="popup-current-price">¥{{ item.price }}</div>
+                  <div class="popup-discount">{{ item.discount }}</div>
+                </div>
+              </div>
+              <div class="item-info">
+                <div class="item-name">{{ item.productName }}</div>
+                <div class="item-rating">
+                  <span class="stars">★★★★☆</span>
+                  <span class="review-count">({{ 10 + index * 5 }})</span>
+                </div>
               </div>
             </div>
-            <div class="item-info">
-              <div class="item-name">{{ item.productName }}</div>
-              <div class="item-rating">
-                <span class="stars">★★★★☆</span>
-                <span class="review-count">({{ 10 + index * 5 }})</span>
-              </div>
-            </div>
-          </div>
-        </transition-group>
+          </transition-group>
+        </div>
         <div class="carousel-controls">
-          <div class="carousel-dots">
-            <span
-              v-for="(_, index) in Math.ceil(promotionItems.length / itemsPerPage)"
-              :key="index"
-              :class="{ 'active': Math.floor(currentIndex / itemsPerPage) === index }"
-              @click="goToPage(index)"
-              class="carousel-dot"
-            ></span>
+          <div class="carousel-nav">
+            <button class="nav-button prev" @click="prevItem">&lt;</button>
+            <div class="carousel-dots">
+              <span
+                v-for="(_, index) in Math.ceil(promotionItems.length / itemsPerPage)"
+                :key="index"
+                :class="{ 'active': Math.floor(currentIndex / itemsPerPage) === index }"
+                @click="goToPage(index)"
+                class="carousel-dot"
+              ></span>
+            </div>
+            <button class="nav-button next" @click="nextItem">&gt;</button>
           </div>
         </div>
       </div>
@@ -174,17 +180,31 @@ export default {
 
     // 切换到下一页
     const nextItem = () => {
+      // 暂停自动轮播，防止在动画过程中再次触发
+      stopAutoRotate();
       currentIndex.value = (currentIndex.value + 1) % promotionItems.value.length;
+      // 动画完成后重新启动自动轮播
+      setTimeout(() => {
+        startAutoRotate();
+      }, 600); // 稍微长于动画时间，确保动画完成
     };
 
     // 切换到上一页
     const prevItem = () => {
+      stopAutoRotate();
       currentIndex.value = (currentIndex.value - 1 + promotionItems.value.length) % promotionItems.value.length;
+      setTimeout(() => {
+        startAutoRotate();
+      }, 600);
     };
 
     // 切换到指定页
     const goToPage = (pageIndex) => {
+      stopAutoRotate();
       currentIndex.value = pageIndex * itemsPerPage;
+      setTimeout(() => {
+        startAutoRotate();
+      }, 600);
     };
 
     // 开始自动轮播
@@ -337,15 +357,50 @@ export default {
   position: relative;
 }
 
-.carousel-container {
+.carousel-wrapper {
   position: relative;
+  height: 220px; /* 固定高度，防止跳变 */
   overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.carousel-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
 }
 
 .carousel-controls {
   display: flex;
   justify-content: center;
-  margin-top: 10px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.carousel-nav {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nav-button {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.nav-button:hover {
+  background-color: var(--hover-color);
+  transform: scale(1.1);
 }
 
 .carousel-dots {
@@ -371,27 +426,38 @@ export default {
 .slide-enter-active,
 .slide-leave-active {
   transition: all 0.5s ease;
+  position: absolute;
+  width: 100%;
 }
 
 .slide-enter-from {
   opacity: 0;
-  transform: translateX(30px);
+  transform: translateX(100%);
 }
 
 .slide-leave-to {
   opacity: 0;
-  transform: translateX(-30px);
+  transform: translateX(-100%);
+}
+
+.slide-enter-active {
+  z-index: 1;
+}
+
+.slide-leave-active {
+  z-index: 0;
 }
 
 .promotion-item {
   display: flex;
   flex-direction: column;
-  margin-bottom: 15px;
   border-radius: var(--border-radius);
   background-color: white;
   cursor: pointer;
   transition: all var(--transition-speed);
   border: 1px solid var(--border-color);
+  height: 100%;
+  width: 100%;
 }
 
 .promotion-item:hover {
@@ -401,7 +467,7 @@ export default {
 
 .item-image {
   width: 100%;
-  height: 120px;
+  height: 140px;
   overflow: hidden;
   position: relative;
   border-radius: var(--border-radius) var(--border-radius) 0 0;
