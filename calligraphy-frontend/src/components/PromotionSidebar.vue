@@ -4,7 +4,7 @@
       {{ isExpanded ? '<<' : '>>' }}
     </div>
     <div class="sidebar-content">
-      <h3 class="sidebar-title">今日特惠</h3>
+      <h3 class="sidebar-title">今日特惠商品</h3>
       <div class="promotion-items">
         <div v-for="(item, index) in promotionItems" :key="index" class="promotion-item" @click="viewProductDetails(item.productId)">
           <div class="item-image">
@@ -32,44 +32,44 @@ export default {
   name: 'PromotionSidebar',
   setup() {
     const router = useRouter();
-    const isExpanded = ref(false);
-    
-    // 模拟优惠商品数据
+    const isExpanded = ref(true); // 默认展开
+
+    // 模拟优惠商品数据 - 与实际商品价格对应
     const promotionItems = ref([
       {
         productId: 1,
-        productName: '高级书法毛笔套装',
-        price: 19.99,
-        originalPrice: 29.99,
+        productName: '书法毛笔套装',
+        price: 29.99,
+        originalPrice: 39.99,
         imagePath: '/images/products/product1.jpg',
-        discount: '6.7折'
+        discount: '7.5折'
       },
       {
         productId: 2,
-        productName: '优质宣纸',
-        price: 9.99,
-        originalPrice: 15.99,
+        productName: '传统黑墨',
+        price: 15.99,
+        originalPrice: 19.99,
         imagePath: '/images/products/product2.jpg',
-        discount: '6.2折'
+        discount: '8折'
       },
       {
-        productId: 5,
-        productName: '专业墨汁',
+        productId: 3,
+        productName: '书法练习用纸',
         price: 12.99,
-        originalPrice: 18.99,
-        imagePath: '/images/products/product5.jpg',
-        discount: '6.8折'
+        originalPrice: 16.99,
+        imagePath: '/images/products/product3.jpg',
+        discount: '7.6折'
       }
     ]);
-    
+
     const toggleSidebar = () => {
       isExpanded.value = !isExpanded.value;
     };
-    
+
     const viewProductDetails = (productId) => {
       router.push(`/products/${productId}`);
     };
-    
+
     return {
       isExpanded,
       promotionItems,
@@ -84,10 +84,9 @@ export default {
 <style scoped>
 .promotion-sidebar {
   position: fixed;
-  left: -250px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 250px;
+  left: 0;
+  top: 200px; /* 调整位置，使其在页面上方 */
+  width: 200px; /* 减小宽度 */
   height: auto;
   max-height: 80vh;
   background-color: white;
@@ -105,11 +104,10 @@ export default {
 
 .toggle-button {
   position: absolute;
-  right: -30px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 30px;
-  height: 60px;
+  right: -25px;
+  top: 10px; /* 调整到顶部 */
+  width: 25px;
+  height: 40px;
   background-color: var(--primary-color);
   color: white;
   display: flex;
@@ -118,28 +116,30 @@ export default {
   cursor: pointer;
   border-radius: 0 4px 4px 0;
   font-weight: bold;
+  font-size: 12px;
 }
 
 .sidebar-content {
   width: 100%;
   height: 100%;
-  padding: 15px;
+  padding: 10px;
   overflow-y: auto;
+  max-height: 500px; /* 限制最大高度 */
 }
 
 .sidebar-title {
   color: var(--primary-color);
-  font-size: 18px;
-  margin-bottom: 15px;
+  font-size: 16px;
+  margin-bottom: 10px;
   text-align: center;
   border-bottom: 1px solid #eee;
-  padding-bottom: 10px;
+  padding-bottom: 8px;
 }
 
 .promotion-items {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 10px;
 }
 
 .promotion-item {
@@ -158,11 +158,11 @@ export default {
 }
 
 .item-image {
-  width: 60px;
-  height: 60px;
+  width: 50px;
+  height: 50px;
   border-radius: 4px;
   overflow: hidden;
-  margin-right: 10px;
+  margin-right: 8px;
 }
 
 .item-image img {
